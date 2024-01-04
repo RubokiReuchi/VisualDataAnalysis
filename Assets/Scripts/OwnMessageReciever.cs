@@ -9,10 +9,13 @@ using UnityEngine.Networking;
 public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
 {
     [SerializeField] Damageable damageableScript;
+    int playerID = -1;
 
     void OnEnable()
     {
         damageableScript.onDamageMessageReceivers.Add(this);
+
+        StartCoroutine(GetLastPlayerID());
     }
 
     void OnDisable()
@@ -35,6 +38,25 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
                 break;
             default:
                 break;
+        }
+    }
+
+    IEnumerator GetLastPlayerID()
+    {
+        WWWForm form = new WWWForm();
+
+        UnityWebRequest www = UnityWebRequest.Post("https://citmalumnes.upc.es/~bielrg/GetLastPlayerID.php", form);
+
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            playerID = int.Parse(www.downloadHandler.text) + 1;
+            Debug.Log("Current PlayerID is " + playerID);
         }
     }
 
