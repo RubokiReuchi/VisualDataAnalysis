@@ -25,14 +25,16 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
 
     public void OnReceiveMessage(MessageType type, object sender, object data)
     {
+        MonoBehaviour senderData = (MonoBehaviour)sender;
         switch (type)
         {
             case MessageType.DAMAGED:
-                MonoBehaviour senderData = (MonoBehaviour)sender;
                 Debug.Log(senderData.transform.position);
                 StartCoroutine(DamagedMessage(senderData.transform.position));
                 break;
             case MessageType.DEAD:
+                Debug.Log(senderData.transform.position);
+                StartCoroutine(DeathMessage(senderData.transform.position));
                 break;
             case MessageType.RESPAWN:
                 break;
@@ -63,6 +65,7 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
     IEnumerator DamagedMessage(Vector3 position)
     {
         WWWForm form = new WWWForm();
+        form.AddField("PlayerID", playerID.ToString());
         form.AddField("PositionX", position.x.ToString().Replace(",", "."));
         form.AddField("PositionY", position.y.ToString().Replace(",", "."));
         form.AddField("PositionZ", position.z.ToString().Replace(",", "."));
@@ -77,8 +80,29 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
         }
         else
         {
-            Debug.Log(www.downloadHandler.text);
-            Debug.Log("Form upload complete!");
+            Debug.Log("Damage Message Complete");
+        }
+    }
+
+    IEnumerator DeathMessage(Vector3 position)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("PlayerID", playerID.ToString());
+        form.AddField("PositionX", position.x.ToString().Replace(",", "."));
+        form.AddField("PositionY", position.y.ToString().Replace(",", "."));
+        form.AddField("PositionZ", position.z.ToString().Replace(",", "."));
+
+        UnityWebRequest www = UnityWebRequest.Post("https://citmalumnes.upc.es/~bielrg/DeathSim.php", form);
+
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            Debug.Log("Death Message Complete");
         }
     }
 }
