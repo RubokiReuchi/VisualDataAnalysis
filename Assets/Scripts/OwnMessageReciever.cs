@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UIElements;
 
 public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
 {
@@ -23,6 +24,11 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
         damageableScript.onDamageMessageReceivers.Remove(this);
     }
 
+    void Start()
+    {
+        StartCoroutine(PathMessage());
+    }
+
     public void OnReceiveMessage(MessageType type, object sender, object data)
     {
         MonoBehaviour senderData = (MonoBehaviour)sender;
@@ -35,8 +41,6 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
             case MessageType.DEAD:
                 Debug.Log(senderData.transform.position);
                 StartCoroutine(DeathMessage(senderData.transform.position));
-                break;
-            case MessageType.RESPAWN:
                 break;
             default:
                 break;
@@ -104,5 +108,33 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
         {
             Debug.Log("Death Message Complete");
         }
+    }
+
+    IEnumerator PathMessage()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("PlayerID", playerID.ToString());
+        form.AddField("PositionX", damageableScript.transform.position.x.ToString().Replace(",", "."));
+        form.AddField("PositionY", damageableScript.transform.position.y.ToString().Replace(",", "."));
+        form.AddField("PositionZ", damageableScript.transform.position.z.ToString().Replace(",", "."));
+        float rot = damageableScript.transform.rotation.eulerAngles.y;
+        form.AddField("Rotation", rot.ToString().Replace(",", "."));
+
+        UnityWebRequest www = UnityWebRequest.Post("https://citmalumnes.upc.es/~bielrg/PathSim.php", form);
+
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            Debug.Log(www.downloadHandler.text);
+        }
+
+        yield return new WaitForSeconds(2);
+
+        StartCoroutine(PathMessage());
     }
 }

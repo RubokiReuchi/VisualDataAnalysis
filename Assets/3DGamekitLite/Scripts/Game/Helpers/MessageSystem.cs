@@ -9,8 +9,7 @@ namespace Gamekit3D
         public enum MessageType
         {
             DAMAGED,
-            DEAD,
-            RESPAWN,
+            DEAD
             //Add your user defined message type after
         }
 
