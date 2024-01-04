@@ -9,19 +9,41 @@ using UnityEngine.UIElements;
 
 public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
 {
-    [SerializeField] Damageable damageableScript;
+    [SerializeField] Damageable playerDamageableScript;
+    [SerializeField] Damageable[] enemyDamageableScript;
+    [SerializeField] Damageable[] boxDamageableScript;
     int playerID = -1;
 
     void OnEnable()
     {
-        damageableScript.onDamageMessageReceivers.Add(this);
+        playerDamageableScript.onDamageMessageReceivers.Add(this);
+
+        foreach (var script in enemyDamageableScript)
+        {
+            script.onDamageMessageReceivers.Add(this);
+        }
+
+        foreach (var script in boxDamageableScript)
+        {
+            script.onDamageMessageReceivers.Add(this);
+        }
 
         StartCoroutine(GetLastPlayerID());
     }
 
     void OnDisable()
     {
-        damageableScript.onDamageMessageReceivers.Remove(this);
+        playerDamageableScript.onDamageMessageReceivers.Remove(this);
+
+        foreach (var script in enemyDamageableScript)
+        {
+            script.onDamageMessageReceivers.Remove(this);
+        }
+
+        foreach (var script in boxDamageableScript)
+        {
+            script.onDamageMessageReceivers.Remove(this);
+        }
     }
 
     void Start()
@@ -35,12 +57,23 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
         switch (type)
         {
             case MessageType.DAMAGED:
-                Debug.Log(senderData.transform.position);
-                StartCoroutine(DamagedMessage(senderData.transform.position));
+                if (senderData.name == "Ellen")
+                {
+                    Debug.Log(senderData.transform.position);
+                    StartCoroutine(DamagedMessage(senderData.transform.position));
+                }
+                else if (senderData.name == "Spitter")
+                {
+                    Debug.Log(senderData.transform.position);
+                    StartCoroutine(HitMessage(senderData.transform.position, senderData.name));
+                }
                 break;
             case MessageType.DEAD:
-                Debug.Log(senderData.transform.position);
-                StartCoroutine(DeathMessage(senderData.transform.position));
+                if (senderData.name == "Ellen")
+                {
+                    Debug.Log(senderData.transform.position);
+                    StartCoroutine(DeathMessage(senderData.transform.position));
+                }
                 break;
             default:
                 break;
@@ -114,10 +147,10 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
     {
         WWWForm form = new WWWForm();
         form.AddField("PlayerID", playerID.ToString());
-        form.AddField("PositionX", damageableScript.transform.position.x.ToString().Replace(",", "."));
-        form.AddField("PositionY", damageableScript.transform.position.y.ToString().Replace(",", "."));
-        form.AddField("PositionZ", damageableScript.transform.position.z.ToString().Replace(",", "."));
-        float rot = damageableScript.transform.rotation.eulerAngles.y;
+        form.AddField("PositionX", playerDamageableScript.transform.position.x.ToString().Replace(",", "."));
+        form.AddField("PositionY", playerDamageableScript.transform.position.y.ToString().Replace(",", "."));
+        form.AddField("PositionZ", playerDamageableScript.transform.position.z.ToString().Replace(",", "."));
+        float rot = playerDamageableScript.transform.rotation.eulerAngles.y;
         form.AddField("Rotation", rot.ToString().Replace(",", "."));
 
         UnityWebRequest www = UnityWebRequest.Post("https://citmalumnes.upc.es/~bielrg/PathSim.php", form);
@@ -130,11 +163,34 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
         }
         else
         {
-            Debug.Log(www.downloadHandler.text);
+            Debug.Log("Path Message Complete");
         }
 
         yield return new WaitForSeconds(2);
 
         StartCoroutine(PathMessage());
+    }
+
+    IEnumerator HitMessage(Vector3 position, string entityName)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("PlayerID", playerID.ToString());
+        form.AddField("PositionX", position.x.ToString().Replace(",", "."));
+        form.AddField("PositionY", position.y.ToString().Replace(",", "."));
+        form.AddField("PositionZ", position.z.ToString().Replace(",", "."));
+        form.AddField("ObjectHitted", entityName);
+
+        UnityWebRequest www = UnityWebRequest.Post("https://citmalumnes.upc.es/~bielrg/HitSim.php", form);
+
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            Debug.Log("Hit Message Complete");
+        }
     }
 }
