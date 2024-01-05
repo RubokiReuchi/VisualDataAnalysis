@@ -74,6 +74,11 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
                     Debug.Log(senderData.transform.position);
                     StartCoroutine(DeathMessage(senderData.transform.position));
                 }
+                else
+                {
+                    Debug.Log(senderData.transform.position);
+                    StartCoroutine(HitMessage(senderData.transform.position, senderData.name));
+                }
                 break;
             default:
                 break;
@@ -145,28 +150,31 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
 
     IEnumerator PathMessage()
     {
-        WWWForm form = new WWWForm();
-        form.AddField("PlayerID", playerID.ToString());
-        form.AddField("PositionX", playerDamageableScript.transform.position.x.ToString().Replace(",", "."));
-        form.AddField("PositionY", playerDamageableScript.transform.position.y.ToString().Replace(",", "."));
-        form.AddField("PositionZ", playerDamageableScript.transform.position.z.ToString().Replace(",", "."));
-        float rot = playerDamageableScript.transform.rotation.eulerAngles.y;
-        form.AddField("Rotation", rot.ToString().Replace(",", "."));
-
-        UnityWebRequest www = UnityWebRequest.Post("https://citmalumnes.upc.es/~bielrg/PathSim.php", form);
-
-        yield return www.SendWebRequest();
-
-        if (www.result != UnityWebRequest.Result.Success)
+        if (playerID != -1)
         {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            Debug.Log("Path Message Complete");
+            WWWForm form = new WWWForm();
+            form.AddField("PlayerID", playerID.ToString());
+            form.AddField("PositionX", playerDamageableScript.transform.position.x.ToString().Replace(",", "."));
+            form.AddField("PositionY", playerDamageableScript.transform.position.y.ToString().Replace(",", "."));
+            form.AddField("PositionZ", playerDamageableScript.transform.position.z.ToString().Replace(",", "."));
+            float rot = playerDamageableScript.transform.rotation.eulerAngles.y;
+            form.AddField("Rotation", rot.ToString().Replace(",", "."));
+
+            UnityWebRequest www = UnityWebRequest.Post("https://citmalumnes.upc.es/~bielrg/PathSim.php", form);
+
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log("Path Message Complete");
+            }
         }
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         StartCoroutine(PathMessage());
     }
