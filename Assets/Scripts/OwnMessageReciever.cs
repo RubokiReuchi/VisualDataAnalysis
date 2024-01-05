@@ -62,7 +62,7 @@ public class OwnMessageReciever : MonoBehaviour, IMessageReceiver
                     Debug.Log(senderData.transform.position);
                     StartCoroutine(DamagedMessage(senderData.transform.position));
                 }
-                else if (senderData.name == "Spitter")
+                else
                 {
                     Debug.Log(senderData.transform.position);
                     StartCoroutine(HitMessage(senderData.transform.position, senderData.name));
