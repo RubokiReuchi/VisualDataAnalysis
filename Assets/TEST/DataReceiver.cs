@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Networking;
 
 public class DataReceiver: MonoBehaviour
@@ -14,16 +15,34 @@ public class DataReceiver: MonoBehaviour
         PATH
     }
 
-    private void Start()
+    public delegate void DataReceiverDelegate(string result);
+    public static event DataReceiverDelegate OnReceiveData;
+
+    public static void receiveData(DataType dataType, uint playerInfo)
     {
-        // TEST
-        receiveData(DataType.HIT, 0);        
+        Instance.StartCoroutine(Instance.getData(dataType, playerInfo));
     }
 
-    public void receiveData(DataType dataType, uint playerInfo)
+    //SINGLETON
+    private static DataReceiver _instance;
+    private static DataReceiver Instance
     {
-        StartCoroutine(getData(dataType, playerInfo));
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<DataReceiver>();
+                if (_instance == null)
+                {
+                    GameObject go = new GameObject("DataReceiver");
+                    _instance = go.AddComponent<DataReceiver>();
+                }
+            }
+            return _instance;
+        }
     }
+
+
 
     IEnumerator getData(DataType dataType, uint playerInfo)
     {
@@ -60,6 +79,7 @@ public class DataReceiver: MonoBehaviour
         else
         {
             Debug.Log("Web request SUCCESSFUL!\n\n" + www.downloadHandler.text);
+            OnReceiveData?.Invoke(www.downloadHandler.text);
         }
     }
 }
