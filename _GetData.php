@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     $getData = "SELECT ";
 
-    if($playerInfo !== 0)
+    if($playerInfo != 0)
         $getData .= "playerID, ";
 
     $getData .= "x, y, z FROM ";
@@ -64,16 +64,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             break;
     }
 
-    if($playerInfo !== 0)
+    if($playerInfo != 0)
         $getData .= "WHERE playerID = $playerInfo";
     
     //------------
+
 
     //Get table from DataBase
     $resultado = $conn->query($getData);
 
     //TODO: Has to be tested
-    echo $resultado;
+    if($resultado->num_rows > 0){
+        while($row = $resultado->fetch_assoc()){
+            echo $row["x"] . "," . $row["y"] . "," . $row["z"] . "\n";
+        }
+    }
+    else{
+        echo "No values";
+    }
 
     // Cerrar la conexión cuando hayas terminado
     $conn->close();
