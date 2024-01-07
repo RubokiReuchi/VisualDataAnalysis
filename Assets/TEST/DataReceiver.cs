@@ -78,7 +78,8 @@ public class DataReceiver: MonoBehaviour
         }
         else
         {
-            Debug.Log("Web request SUCCESSFUL!\n\n" + www.downloadHandler.text);
+            Debug.Log("Web request SUCCESSFUL!");
+            //Debug.Log("\n\n" + www.downloadHandler.text);
             OnReceiveData?.Invoke(www.downloadHandler.text);
         }
     }
