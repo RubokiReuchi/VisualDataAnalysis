@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+
         playerList.ClearOptions();
 
         playerList.options.Add(new TMP_Dropdown.OptionData() {text = "All"});
@@ -26,24 +27,45 @@ public class UIManager : MonoBehaviour
         {
             playerList.options.Add(new TMP_Dropdown.OptionData() { text = i.ToString() });
         }
+
+        topCamera.transform.position = new Vector3(7.7f, 45, 0);
     }
 
     private void Update()
     {
         if(topCamera.gameObject.activeInHierarchy)
         {
-            if (Input.GetKey(KeyCode.A)) topCamera.transform.position = new Vector3(topCamera.transform.position.x - 0.1f, topCamera.transform.position.y, topCamera.transform.position.z);
-            if (Input.GetKey(KeyCode.D)) topCamera.transform.position = new Vector3(topCamera.transform.position.x + 0.1f, topCamera.transform.position.y, topCamera.transform.position.z);
+            if (Input.GetKey(KeyCode.A) && topCamera.transform.position.x >= 0) 
+                topCamera.transform.position = new Vector3(topCamera.transform.position.x - 0.1f, topCamera.transform.position.y, topCamera.transform.position.z);
+            if (Input.GetKey(KeyCode.D) && topCamera.transform.position.x <= 55)
+                topCamera.transform.position = new Vector3(topCamera.transform.position.x + 0.1f, topCamera.transform.position.y, topCamera.transform.position.z);
 
-            if (Input.GetKey(KeyCode.W)) topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y, topCamera.transform.position.z + 0.1f);
-            if (Input.GetKey(KeyCode.S)) topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y, topCamera.transform.position.z - 0.1f);
+            if (Input.GetKey(KeyCode.W) && topCamera.transform.position.z <= 25) 
+                topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y, topCamera.transform.position.z + 0.1f);
+            if (Input.GetKey(KeyCode.S) && topCamera.transform.position.z >= -20) 
+                topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y, topCamera.transform.position.z - 0.1f);
 
-            if (Input.GetAxis("Mouse ScrollWheel") < 0) topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y + 1, topCamera.transform.position.z);
-            if (Input.GetAxis("Mouse ScrollWheel") > 0) topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y - 1, topCamera.transform.position.z);
+            if (Input.GetAxis("Mouse ScrollWheel") < 0 && topCamera.transform.position.y <= 100) 
+                topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y + 1, topCamera.transform.position.z);
+            if (Input.GetAxis("Mouse ScrollWheel") > 0 && topCamera.transform.position.y >= 15) 
+                topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y - 1, topCamera.transform.position.z);
         }
         else
         {
+            if (Input.GetKey(KeyCode.A))
+                frontCamera.transform.eulerAngles += new Vector3(0,-0.1f,0);
+            if (Input.GetKey(KeyCode.D))
+                frontCamera.transform.eulerAngles += new Vector3(0,0.1f,0);
 
+            if (Input.GetKey(KeyCode.W))
+                frontCamera.transform.position += Vector3.forward * 0.1f;
+            if (Input.GetKey(KeyCode.S))
+                frontCamera.transform.position += Vector3.back * 0.1f;
+
+
+
+            if (Input.GetKey(KeyCode.L))
+                    Cursor.visible = true;
         }
     }
 
