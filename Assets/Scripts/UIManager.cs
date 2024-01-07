@@ -28,6 +28,25 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(topCamera.gameObject.activeInHierarchy)
+        {
+            if (Input.GetKey(KeyCode.A)) topCamera.transform.position = new Vector3(topCamera.transform.position.x - 0.1f, topCamera.transform.position.y, topCamera.transform.position.z);
+            if (Input.GetKey(KeyCode.D)) topCamera.transform.position = new Vector3(topCamera.transform.position.x + 0.1f, topCamera.transform.position.y, topCamera.transform.position.z);
+
+            if (Input.GetKey(KeyCode.W)) topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y, topCamera.transform.position.z + 0.1f);
+            if (Input.GetKey(KeyCode.S)) topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y, topCamera.transform.position.z - 0.1f);
+
+            if (Input.GetAxis("Mouse ScrollWheel") < 0) topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y + 1, topCamera.transform.position.z);
+            if (Input.GetAxis("Mouse ScrollWheel") > 0) topCamera.transform.position = new Vector3(topCamera.transform.position.x, topCamera.transform.position.y - 1, topCamera.transform.position.z);
+        }
+        else
+        {
+
+        }
+    }
+
     public void SwitchCamera()
     {
         if(topCamera.gameObject.activeInHierarchy)
