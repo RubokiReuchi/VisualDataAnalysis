@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class SpawnData : MonoBehaviour
 {
+
+    [SerializeField] GameObject crossPrefab;
+    [SerializeField] GameObject hitPrefab;
+    [SerializeField] GameObject swordPrefab;
     [SerializeField] GameObject cubePrefab;
+
 
 
     // Start is called before the first frame update
