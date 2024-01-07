@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Verificar la conexión
     if ($conn->connect_error) {
-        die("Error de conexión: " . $conn->connect_error);
+        die("error de conexión: " . $conn->connect_error);
     }
     
     //------------
@@ -47,7 +47,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if($playerInfo != 0)
         $getData .= "playerID, ";
 
-    $getData .= "x, y, z FROM ";
+    $getData .= "x, y, z ";
+    
+    if($dataToGet == "path" && $playerInfo != 0)
+        $getData .= ", rotation ";
+
+    $getData .= "FROM ";
 
     switch ($dataToGet) {
         case "damaged":
@@ -69,18 +74,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     //------------
 
-
     //Get table from DataBase
     $resultado = $conn->query($getData);
 
     //TODO: Has to be tested
     if($resultado->num_rows > 0){
-        while($row = $resultado->fetch_assoc()){
-            echo $row["x"] . "," . $row["y"] . "," . $row["z"] . "\n";
+        if($dataToGet == "path" && $playerInfo != 0){
+            while($row = $resultado->fetch_assoc()){
+                echo $row["x"] . "," . $row["y"] . "," . $row["z"] . "," . $row["rotation"] . "\n";
+            }
+        }
+        else{
+            while($row = $resultado->fetch_assoc()){
+                echo $row["x"] . "," . $row["y"] . "," . $row["z"] . "\n";
+            }
         }
     }
     else{
-        echo "No values";
+        echo "No values (error)";
     }
 
     // Cerrar la conexión cuando hayas terminado
@@ -88,6 +99,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 }
 else {
-    echo "nullData";
+    echo "nullData (error)";
 }
 ?>

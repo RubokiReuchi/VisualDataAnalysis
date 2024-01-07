@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TestForReceiver : MonoBehaviour
@@ -8,11 +9,24 @@ public class TestForReceiver : MonoBehaviour
     void Start()
     {
         DataReceiver.OnReceiveData += DoSomething;
-        DataReceiver.receiveData(DataReceiver.DataType.DEATH, 0);
+        DataReceiver.receiveData(DataReceiver.DataType.PATH, 0);
     }
 
     void DoSomething(string s)
     {
-        Debug.Log("I did something!");
+        //Check if s is correct
+        if (s.Contains("error"))
+        {
+            Debug.Log("Something went wrong!");
+            return;
+        }
+
+        string[] rows = s.Split('\n');
+        for (int i = 0; i < rows.Length - 1; i++) {
+            string[] col = rows[i].Split(",");
+
+            Vector3 pos = new Vector3(float.Parse(col[0]), float.Parse(col[1]), float.Parse(col[2]))
+            Debug.Log(pos);
+        }
     }
 }
