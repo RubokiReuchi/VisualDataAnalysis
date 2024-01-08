@@ -10,10 +10,10 @@ public class TestForReceiver : MonoBehaviour
     //0 for all users
     public uint userID = 0;
 
-    bool showPath = true;
-    bool showDeath = false;
-    bool showHit= false;
-    bool showAttack = true;
+    public bool showPath = true;
+    public bool showDeath = false;
+    public bool showHit = false;
+    public bool showAttack = true;
 
     string path = "Assets/Heatmap/Assets/MyData.txt";
     
@@ -33,8 +33,7 @@ public class TestForReceiver : MonoBehaviour
         public string EventName;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void Receive()
     {
         if (showPath)
         {
@@ -64,11 +63,6 @@ public class TestForReceiver : MonoBehaviour
 
             DataReceiver.receiveData(DataReceiver.DataType.HIT, userID);
         }
-    }
-
-    public void Receive()
-    {
-        
     }
 
     void DoSomething(string s)

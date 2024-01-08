@@ -16,10 +16,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] Toggle interaction;
     [SerializeField] Toggle path;
 
+    [SerializeField] TestForReceiver controllCheckBox;
+
     private void Start()
     {
-
-       
         playerList.ClearOptions();
 
         playerList.options.Add(new TMP_Dropdown.OptionData() {text = "All"});
@@ -34,9 +34,8 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-
+        //Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.None;
 
         if (topCamera.gameObject.activeInHierarchy)
         {
@@ -66,11 +65,6 @@ public class UIManager : MonoBehaviour
                 frontCamera.transform.position += Vector3.forward * 0.1f;
             if (Input.GetKey(KeyCode.S))
                 frontCamera.transform.position += Vector3.back * 0.1f;
-
-
-
-            if (Input.GetKey(KeyCode.L))
-                    Cursor.visible = true;
         }
     }
 
@@ -92,18 +86,18 @@ public class UIManager : MonoBehaviour
 
     public void SelectPlayer()
     {
-        Debug.Log("Player selectes is: " + playerList.value.ToString());
+        controllCheckBox.userID = (uint)playerList.value;
     }
 
     public void ActivateDeath()
     {
         if(death.isOn)
         { 
-           Debug.Log("Show Death");
+            controllCheckBox.showDeath = true;
         }
         else
         {
-            Debug.Log("Hide Death");
+            controllCheckBox.showDeath = false;
         }
     }
 
@@ -111,11 +105,11 @@ public class UIManager : MonoBehaviour
     {
         if (damage.isOn)
         {
-            Debug.Log("Show Damage");
+            controllCheckBox.showHit = true;
         }
         else
         {
-            Debug.Log("Hide Damage");
+            controllCheckBox.showHit = false;
         }
     }
 
@@ -123,11 +117,11 @@ public class UIManager : MonoBehaviour
     {
         if (interaction.isOn)
         {
-            Debug.Log("Show Interaction");
+            controllCheckBox.showAttack = true;
         }
         else
         {
-            Debug.Log("Hide Interaction");
+            controllCheckBox.showAttack = false;
         }
     }
 
@@ -135,11 +129,11 @@ public class UIManager : MonoBehaviour
     {
         if (path.isOn)
         {
-            Debug.Log("Show Path");
+            controllCheckBox.showPath = true;
         }
         else
         {
-            Debug.Log("Hide Path");
+            controllCheckBox.showPath = false;
         }
     }
 }
