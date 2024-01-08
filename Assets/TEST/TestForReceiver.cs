@@ -4,8 +4,6 @@ using System.Globalization;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 
 public class TestForReceiver : MonoBehaviour
 {
@@ -16,9 +14,6 @@ public class TestForReceiver : MonoBehaviour
     public bool showDeath = false;
     public bool showHit = false;
     public bool showAttack = true;
-
-    public Button showHeatmap;
-    
 
     string path = "Assets/Heatmap/Assets/MyData.txt";
     
@@ -73,29 +68,30 @@ public class TestForReceiver : MonoBehaviour
     void DoSomething(string s)
     {
         Debug.Log(s);
-        ConvertirAJSONFormato(s, path);
-
-        //Check if s is correct
-        if (s.Contains("error"))
+        if (userID == 0 && showPath )
         {
-            Debug.Log("Something went wrong!");
-            return;
+
+            ConvertirAJSONFormato(s, path);
         }
-
-        string[] rows = s.Split('\n');
-        for (int i = 0; i < rows.Length - 1; i++)
+        else
         {
-            string[] col = rows[i].Split(",");
-
-            Vector3 pos = new Vector3(float.Parse(col[0], CultureInfo.InvariantCulture), float.Parse(col[1], CultureInfo.InvariantCulture), float.Parse(col[2], CultureInfo.InvariantCulture));
-            if(userID!=0)
+            //Check if s is correct
+            if (s.Contains("error"))
             {
+                Debug.Log("Something went wrong!");
+                return;
+            }
 
+            string[] rows = s.Split('\n');
+            for (int i = 0; i < rows.Length - 1; i++)
+            {
+                string[] col = rows[i].Split(",");
+
+                Vector3 pos = new Vector3(float.Parse(col[0], CultureInfo.InvariantCulture), float.Parse(col[1], CultureInfo.InvariantCulture), float.Parse(col[2], CultureInfo.InvariantCulture));
                 if (showPath)
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.crossPrefab);
-                }
-                else if (showAttack)
+                }else if (showAttack)
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.swordPrefab);
                 }
@@ -107,13 +103,9 @@ public class TestForReceiver : MonoBehaviour
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.hitPrefab);
                 }
-            }
-            else
-            {
-                showHeatmap.interactable = true;
-            }
 
-            Debug.Log(pos);
+                Debug.Log(pos);
+            }
         }
 
     }
