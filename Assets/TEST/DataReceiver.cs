@@ -46,6 +46,8 @@ public class DataReceiver: MonoBehaviour
 
     IEnumerator getData(DataType dataType, uint playerInfo)
     {
+
+        
         WWWForm form = new WWWForm();
 
         string type = "";

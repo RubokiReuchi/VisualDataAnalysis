@@ -5,17 +5,20 @@ using UnityEngine;
 public class SpawnData : MonoBehaviour
 {
 
-    [SerializeField] GameObject crossPrefab;
-    [SerializeField] GameObject hitPrefab;
-    [SerializeField] GameObject swordPrefab;
-    [SerializeField] GameObject cubePrefab;
+    [SerializeField] public GameObject crossPrefab;
+    [SerializeField] public GameObject hitPrefab;
+    [SerializeField] public GameObject swordPrefab;
+    [SerializeField] public GameObject cubePrefab;
 
-
+    public static SpawnData instance;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-
+        if(instance == null)
+            instance = this;
+        else
+            Destroy(this);
     }
 
     // Update is called once per frame
@@ -27,7 +30,7 @@ public class SpawnData : MonoBehaviour
         }
     }
 
-    void DrawData(Vector3 position, Quaternion rotation, GameObject prefab)
+    public void DrawData(Vector3 position, Quaternion rotation, GameObject prefab)
     {
         GameObject.Instantiate(prefab, position, rotation);
     }

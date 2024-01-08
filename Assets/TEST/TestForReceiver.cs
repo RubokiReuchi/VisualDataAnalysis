@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,6 +10,10 @@ public class TestForReceiver : MonoBehaviour
     //0 for all users
     public uint userID = 0;
 
+    bool showPath = true;
+    bool showDeath = false;
+    bool showHit= false;
+    bool showAttack = true;
 
     string path = "Assets/Heatmap/Assets/MyData.txt";
     
@@ -31,36 +36,84 @@ public class TestForReceiver : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DataReceiver.OnReceiveData += DoSomething;
+        if (showPath)
+        {
+            DataReceiver.OnReceiveData += DoSomething;
 
-        //poner aqui lo de la ui
-        DataReceiver.receiveData(DataReceiver.DataType.PATH, userID);
+
+            DataReceiver.receiveData(DataReceiver.DataType.PATH, userID);
+        }
+        else if (showDeath)
+        {
+            DataReceiver.OnReceiveData += DoSomething;
+
+
+            DataReceiver.receiveData(DataReceiver.DataType.DEATH, userID);
+        }
+        else if (showHit)
+        {
+            DataReceiver.OnReceiveData += DoSomething;
+
+
+            DataReceiver.receiveData(DataReceiver.DataType.DAMAGED, userID);
+        }
+        else if (showAttack)
+        {
+            DataReceiver.OnReceiveData += DoSomething;
+
+
+            DataReceiver.receiveData(DataReceiver.DataType.HIT, userID);
+        }
+    }
+
+    public void Receive()
+    {
+        
     }
 
     void DoSomething(string s)
     {
-        if(userID == 0 ) //tambien solo si es PATH
+        Debug.Log(s);
+        if (userID == 0 && showPath )
         {
 
             ConvertirAJSONFormato(s, path);
         }
-
-
-        
-        //Check if s is correct
-        if (s.Contains("error"))
+        else
         {
-            Debug.Log("Something went wrong!");
-            return;
+            //Check if s is correct
+            if (s.Contains("error"))
+            {
+                Debug.Log("Something went wrong!");
+                return;
+            }
+
+            string[] rows = s.Split('\n');
+            for (int i = 0; i < rows.Length - 1; i++)
+            {
+                string[] col = rows[i].Split(",");
+
+                Vector3 pos = new Vector3(float.Parse(col[0], CultureInfo.InvariantCulture), float.Parse(col[1], CultureInfo.InvariantCulture), float.Parse(col[2], CultureInfo.InvariantCulture));
+                if (showPath)
+                {
+                    SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.crossPrefab);
+                }else if (showAttack)
+                {
+                    SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.swordPrefab);
+                }
+                else if (showDeath)
+                {
+                    SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.crossPrefab);
+                }
+                else if (showHit)
+                {
+                    SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.hitPrefab);
+                }
+
+                Debug.Log(pos);
+            }
         }
 
-        string[] rows = s.Split('\n');
-        for (int i = 0; i < rows.Length - 1; i++) {
-            string[] col = rows[i].Split(",");
-
-            Vector3 pos = new Vector3(float.Parse(col[0]), float.Parse(col[1]), float.Parse(col[2]));
-            Debug.Log(pos);
-        }
     }
 
     void ConvertirAJSONFormato(string inputString, string ruta)
@@ -73,9 +126,9 @@ public class TestForReceiver : MonoBehaviour
             string[] col = rows[i].Split(",");
             PositionData posicion = new PositionData
             {
-                x = float.Parse(col[0]),
-                y = float.Parse(col[1]),
-                z = float.Parse(col[2])
+                x = float.Parse(col[0], CultureInfo.InvariantCulture),
+                y = float.Parse(col[1], CultureInfo.InvariantCulture),
+                z = float.Parse(col[2], CultureInfo.InvariantCulture)
             };
 
             // Crea un nuevo objeto EventData y asigna los valores
@@ -102,7 +155,7 @@ public class TestForReceiver : MonoBehaviour
         try
         {
             // Abre el archivo para escribir (si no existe, lo crea; si existe, sobrescribe)
-            StreamWriter escritor = new StreamWriter(ruta, true);
+            StreamWriter escritor = new StreamWriter(ruta, false);
 
             // Escribe el JSON en el archivo seguido de un salto de línea
             escritor.WriteLine(json);

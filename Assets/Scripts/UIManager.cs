@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
 
+       
         playerList.ClearOptions();
 
         playerList.options.Add(new TMP_Dropdown.OptionData() {text = "All"});
@@ -33,7 +34,11 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if(topCamera.gameObject.activeInHierarchy)
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+
+        if (topCamera.gameObject.activeInHierarchy)
         {
             if (Input.GetKey(KeyCode.A) && topCamera.transform.position.x >= 0) 
                 topCamera.transform.position = new Vector3(topCamera.transform.position.x - 0.1f, topCamera.transform.position.y, topCamera.transform.position.z);
