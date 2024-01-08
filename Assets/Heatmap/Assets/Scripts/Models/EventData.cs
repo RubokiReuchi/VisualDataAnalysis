@@ -12,6 +12,6 @@ public class EventData
     /// <summary>
     /// Should this event be used for heatmap visualisation
     /// </summary>
-    public bool ShouldEventBeVisualised = false;
+    public bool ShouldEventBeVisualised = true;
 }
 
