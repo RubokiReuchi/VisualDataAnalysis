@@ -20,7 +20,7 @@ public class TestForReceiver : MonoBehaviour
     public Button showHeatmap;
 
 
-    string path = "Assets/Heatmap/Assets/MyData.txt";
+    [HideInInspector] public string path = "Assets/Heatmap/Assets/MyData.txt";
 
 
     [System.Serializable]
@@ -165,7 +165,7 @@ public class TestForReceiver : MonoBehaviour
         try
         {
             // Abre el archivo para escribir (si no existe, lo crea; si existe, sobrescribe)
-            StreamWriter escritor = new StreamWriter(ruta, false);
+            StreamWriter escritor = new StreamWriter(ruta, true);
 
             // Escribe el JSON en el archivo seguido de un salto de línea
             escritor.WriteLine(json);

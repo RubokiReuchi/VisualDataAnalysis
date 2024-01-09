@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine;
+using System.IO;
+
 
 public class SpawnData : MonoBehaviour
 {
-
+    [SerializeField] TestForReceiver receiveData;
     [SerializeField] GameObject heatmapGO;
 
     [SerializeField] public GameObject crossPrefab;
@@ -44,6 +47,8 @@ public class SpawnData : MonoBehaviour
 
     public void ResetData()
     {
+        File.WriteAllText(receiveData.path, string.Empty);
+        
         foreach (GameObject instance in instancias)
         {
             Destroy(instance);
@@ -55,4 +60,6 @@ public class SpawnData : MonoBehaviour
 
     }
 }
+
+
 
