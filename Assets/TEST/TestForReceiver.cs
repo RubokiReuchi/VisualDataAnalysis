@@ -12,10 +12,10 @@ public class TestForReceiver : MonoBehaviour
     //0 for all users
     public uint userID = 0;
 
-    public bool showPath = true;
-    public bool showDeath = false;
-    public bool showHit = false;
-    public bool showAttack = true;
+    [HideInInspector] public bool showPath;
+    [HideInInspector] public bool showDeath;
+    [HideInInspector] public bool showHit;
+    [HideInInspector] public bool showAttack;
 
     public Button showHeatmap;
 
@@ -37,9 +37,17 @@ public class TestForReceiver : MonoBehaviour
         public PositionData Position;
         public string EventName;
     }
-
+    private void Start()
+    {
+        showPath = false;
+        showDeath = false;
+        showHit = false;
+        showAttack = false;
+    }
     public void Receive()
     {
+
+        SpawnData.instance.ResetData();
         if (showPath)
         {
             DataReceiver.OnReceiveData += DoSomething;
@@ -47,21 +55,21 @@ public class TestForReceiver : MonoBehaviour
 
             DataReceiver.receiveData(DataReceiver.DataType.PATH, userID);
         }
-        else if (showDeath)
+        if (showDeath)
         {
             DataReceiver.OnReceiveData += DoSomething;
 
 
             DataReceiver.receiveData(DataReceiver.DataType.DEATH, userID);
         }
-        else if (showHit)
+        if (showHit)
         {
             DataReceiver.OnReceiveData += DoSomething;
 
 
             DataReceiver.receiveData(DataReceiver.DataType.DAMAGED, userID);
         }
-        else if (showAttack)
+        if (showAttack)
         {
             DataReceiver.OnReceiveData += DoSomething;
 
@@ -95,15 +103,15 @@ public class TestForReceiver : MonoBehaviour
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.crossPrefab);
                 }
-                else if (showAttack)
+                if (showAttack)
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.swordPrefab);
                 }
-                else if (showDeath)
+                if (showDeath)
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.crossPrefab);
                 }
-                else if (showHit)
+                if (showHit)
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.hitPrefab);
                 }

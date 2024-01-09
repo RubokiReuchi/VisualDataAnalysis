@@ -5,15 +5,17 @@ using UnityEngine;
 public class SpawnData : MonoBehaviour
 {
 
+    [SerializeField] GameObject heatmapGO;
+
     [SerializeField] public GameObject crossPrefab;
     [SerializeField] public GameObject hitPrefab;
     [SerializeField] public GameObject swordPrefab;
     [SerializeField] public GameObject cubePrefab;
 
-    List<GameObject> instancias;
+    List<GameObject> instancias = new();
 
     public static SpawnData instance;
-    public static GameObject instancePrefab;
+    
 
     // Start is called before the first frame update
     void Awake()
@@ -35,16 +37,22 @@ public class SpawnData : MonoBehaviour
 
     public void DrawData(Vector3 position, Quaternion rotation, GameObject prefab)
     {
-        instancePrefab = GameObject.Instantiate(prefab, position, rotation);
+       GameObject  instancePrefab = GameObject.Instantiate(prefab, position, rotation);
+       instancias.Add(instancePrefab);
 
     }
 
     public void ResetData()
     {
-        
-            
+        foreach (GameObject instance in instancias)
+        {
+            Destroy(instance);
+        }
+        instancias.Clear();
+
+        ParticleSystem ps = heatmapGO.GetComponent<ParticleSystem>();
+        if (ps) ps.Clear();
+
     }
-
-
 }
 

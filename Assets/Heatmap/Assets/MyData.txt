@@ -1,1 +1,1 @@
-{"Position":{"x":-6.299960136413574,"y":-0.01850459910929203,"z":8.79934024810791},"EventName":"Object Position"}
+{"Position":{"x":26.0,"y":0.04483719915151596,"z":1.0},"EventName":"Object Position"}
