@@ -32,10 +32,7 @@ public class SpawnData : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            DrawData(new Vector3(0, 0, 0), Quaternion.identity, cubePrefab);
-        }
+       
     }
 
     public void DrawData(Vector3 position, Quaternion rotation, GameObject prefab)

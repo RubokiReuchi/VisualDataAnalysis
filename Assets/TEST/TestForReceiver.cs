@@ -17,6 +17,7 @@ public class TestForReceiver : MonoBehaviour
     [HideInInspector] public bool showHit;
     [HideInInspector] public bool showAttack;
 
+
     public Button showHeatmap;
 
 
@@ -101,7 +102,7 @@ public class TestForReceiver : MonoBehaviour
 
                 if (showPath)
                 {
-                    SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.crossPrefab);
+                    SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.cubePrefab);
                 }
                 if (showAttack)
                 {
@@ -145,6 +146,7 @@ public class TestForReceiver : MonoBehaviour
             EventData evento = new EventData
             {
                 Position = posicion,
+
                 EventName = "Object Position"
             };
             // Convierte el objeto a formato JSON
