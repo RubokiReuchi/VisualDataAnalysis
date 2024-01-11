@@ -15,7 +15,7 @@ public class DataReceiver: MonoBehaviour
         PATH
     }
 
-    public delegate void DataReceiverDelegate(string result);
+    public delegate void DataReceiverDelegate(DataType dataType, string result);
     public static event DataReceiverDelegate OnReceiveData;
 
     public static void receiveData(DataType dataType, uint playerInfo)
@@ -82,7 +82,7 @@ public class DataReceiver: MonoBehaviour
         {
             Debug.Log("Web request SUCCESSFUL!");
             //Debug.Log("\n\n" + www.downloadHandler.text);
-            OnReceiveData?.Invoke(www.downloadHandler.text);
+            OnReceiveData?.Invoke(dataType, www.downloadHandler.text);
         }
     }
 }

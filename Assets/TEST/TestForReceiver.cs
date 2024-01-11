@@ -79,7 +79,7 @@ public class TestForReceiver : MonoBehaviour
         }
     }
 
-    void DoSomething(string s)
+    void DoSomething(DataReceiver.DataType dataType, string s)
     {
         Debug.Log(s);
         ConvertirAJSONFormato(s, path);
