@@ -97,22 +97,25 @@ public class TestForReceiver : MonoBehaviour
             string[] col = rows[i].Split(",");
 
             Vector3 pos = new Vector3(float.Parse(col[0], CultureInfo.InvariantCulture), float.Parse(col[1], CultureInfo.InvariantCulture), float.Parse(col[2], CultureInfo.InvariantCulture));
+
+           
+
             if (userID != 0)
             {
 
-                if (showPath)
+                if (dataType== DataReceiver.DataType.PATH)
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.cubePrefab);
                 }
-                if (showAttack)
+                if (dataType == DataReceiver.DataType.HIT)
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.swordPrefab);
                 }
-                if (showDeath)
+                if (dataType == DataReceiver.DataType.DEATH)
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.crossPrefab);
                 }
-                if (showHit)
+                if (dataType == DataReceiver.DataType.DAMAGED)
                 {
                     SpawnData.instance.DrawData(pos, Quaternion.identity, SpawnData.instance.hitPrefab);
                 }
